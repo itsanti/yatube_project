@@ -2,11 +2,12 @@ from django.shortcuts import get_object_or_404, render
 
 from .models import Group, Post
 
+POST_FETCH_SIZE = 10
+
 
 def index(request):
-    posts = Post.objects.order_by('-pub_date')[:10]
+    posts = Post.objects.select_related('author', 'group')[:POST_FETCH_SIZE]
     context = {
-        'title': 'Последние обновления на сайте',
         'posts': posts,
     }
     return render(request, 'posts/index.html', context)
@@ -14,7 +15,7 @@ def index(request):
 
 def group_posts(request, slug):
     group = get_object_or_404(Group, slug=slug)
-    posts = Post.objects.filter(group=group).order_by('-pub_date')[:10]
+    posts = group.posts.select_related('author')[:POST_FETCH_SIZE]
     context = {
         'group': group,
         'posts': posts,

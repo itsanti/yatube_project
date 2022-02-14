@@ -6,7 +6,7 @@ from .models import Group, Post
 def index(request):
     posts = Post.objects.order_by('-pub_date')[:10]
     context = {
-        'title': 'Это главная страница проекта Yatube',
+        'title': 'Последние обновления на сайте',
         'posts': posts,
     }
     return render(request, 'posts/index.html', context)
